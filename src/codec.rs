@@ -187,12 +187,13 @@ impl<'de, T> ::serde::Deserialize<'de> for Compact<T> where T: ::serde::Deserial
 impl_from_compact! { u8, u16, u32, u64, u128 }
 
 /// Trait that tells you if a given type can be encoded/decoded in a compact way.
-pub trait HasCompact: Sized {
-	/// The compact type; this can be 
+pub trait HasCompact: Sized + Clone {
+	/// The compact type; this can be
 	type Type: Encode + Decode + From<Self> + Into<Self> + Clone + PartialEq + Eq + MaybeDebugSerde;
 }
 
 impl<T> HasCompact for T where
+	T: Clone,
 	Compact<T>: Encode + Decode + From<Self> + Into<Self> + Clone + PartialEq + Eq + MaybeDebugSerde
 {
 	type Type = Compact<T>;
@@ -858,7 +859,7 @@ mod tests {
 			(16384, 4), (1073741823, 4),
 			(1073741824, 5), (1 << 32 - 1, 5),
 			(1 << 32, 6), (1 << 40, 7), (1 << 48, 8), (1 << 56 - 1, 8), (1 << 56, 9), (1 << 64 - 1, 9),
-			(1 << 64, 10), (1 << 72, 11), (1 << 80, 12), (1 << 88, 13), (1 << 96, 14), (1 << 104, 15), 
+			(1 << 64, 10), (1 << 72, 11), (1 << 80, 12), (1 << 88, 13), (1 << 96, 14), (1 << 104, 15),
 			(1 << 112, 16), (1 << 120 - 1, 16), (1 << 120, 17), (u128::max_value(), 17)
 		];
 		for &(n, l) in &tests {

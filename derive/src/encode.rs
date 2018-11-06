@@ -47,7 +47,7 @@ fn encode_fields<F>(
 			let field_type = &f.ty;
 			quote_spanned! { f.span() => { #dest.push(&Compact::<#field_type>::from(#field)); } }
 		} else if let Some(encoded_as) = encoded_as {
-			quote_spanned! { f.span() => { #dest.push(&#encoded_as::from(*#field)); } }
+			quote_spanned! { f.span() => { #dest.push(&#encoded_as::from((*#field).clone())); } }
 		} else {
 			quote_spanned! { f.span() =>
 					#dest.push(#field);

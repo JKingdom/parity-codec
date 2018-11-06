@@ -44,3 +44,13 @@ mod keyedvec;
 pub use self::codec::{Input, Output, Encode, Decode, Codec, Compact, HasCompact};
 pub use self::joiner::Joiner;
 pub use self::keyedvec::KeyedVec;
+
+/// Decode an object from the given slice.
+pub fn from_slice<R: Decode>(data: &[u8]) -> Option<R> {
+	R::decode(&mut &data[..])
+}
+
+/// Decode an object from the given vector.
+pub fn from_vec<R: Decode>(data: Vec<u8>) -> Option<R> {
+	from_slice(&data)
+}
